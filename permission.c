@@ -200,7 +200,12 @@ static int
 lsetambientcap(lua_State *L)
 {
 	int cap = checkcapflag(L, 1);
+#ifdef PR_CAP_AMBIENT
 	int res = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, cap, 0, 0);
+#else
+	int res = -1;
+	errno = ENOTSUP;
+#endif
 	return pushres(L, res >= 0);
 }
 
